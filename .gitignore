@@ -16,7 +16,6 @@ logs/
 # Data and model artifacts
 data/
 models/
-db/
 
 # Other artifacts
 *.egg-info/
