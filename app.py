@@ -136,7 +136,7 @@ def mood_today():
             FROM predictions 
             WHERE DATE(record_timestamp) = DATE('now') 
             GROUP BY primary_emotion 
-            ORDER BY COUNT(*) DESC 
+            ORDER BY COUNT(*) DESC, record_timestamp DESC 
             LIMIT 1
         """
         
@@ -146,7 +146,7 @@ def mood_today():
 
         app.logger.info("result", result)
 
-        return {'today_mood': result}
+        return {'today_mood': result[0]}
 
 
 # Define the API endpoint for retrieving the latest 10 typing activity and their mood percentages
