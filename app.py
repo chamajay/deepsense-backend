@@ -123,7 +123,7 @@ def process_text():
     return {'text': text, 'predictions': predictions}
 
 
-# Define the API endpoint for retrieving the overall mood of the day.
+# Define the API endpoint for retrieving the overall mood of the day
 # curl http://localhost:5000/today-mood
 @app.route('/today-mood')
 def mood_today():
@@ -147,6 +147,60 @@ def mood_today():
         app.logger.info("result", result)
 
         return {'today_mood': result}
+
+
+# Define the API endpoint for retrieving the latest 10 typing activity and their mood percentages
+# curl http://localhost:5000/recent-text-activity
+@app.route('/recent-text-activity')
+def recent_text_activity():
+     with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        query = """
+            SELECT 
+                text, 
+                emotion_joy, 
+                emotion_surprise, 
+                emotion_neutral, 
+                emotion_sadness, 
+                emotion_anger, 
+                emotion_disgust, 
+                emotion_fear, 
+                primary_emotion, 
+                suicidal_label_0, 
+                suicidal_label_1, 
+                suicide_risk 
+                FROM 
+                predictions 
+            ORDER BY record_timestamp DESC 
+            LIMIT 10
+        """
+
+        # Execute the query to get the highest repeated emotion
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        result = []
+    
+        for row in rows:
+            text, joy, surprise, neutral, sadness, anger, disgust, fear, primary_emotion, label_0, label_1, risk = row
+            result.append({
+                'text': text,
+                'joy': round(joy * 100, 2),
+                'surprise': round(surprise * 100, 2),
+                'neutral': round(neutral * 100, 2),
+                'sadness': round(sadness * 100, 2),
+                'anger': round(anger * 100, 2),
+                'disgust': round(disgust * 100, 2),
+                'fear': round(fear * 100, 2),
+                'primary_emotion': primary_emotion,
+                'suicidal_label_0': round(label_0 * 100, 2),
+                'suicidal_label_1': round(label_1 * 100, 2),
+                'suicide_risk': risk
+            })
+
+        return {'recent_text_activity': result}
 
 
 
