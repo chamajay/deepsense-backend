@@ -15,7 +15,9 @@ logs/
 
 # Data and model artifacts
 data/
-models/
+models/emotion-english-distilroberta-base
+models/suicidal-text-electra-cj
+db/
 
 # Other artifacts
 *.egg-info/
