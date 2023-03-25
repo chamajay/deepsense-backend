@@ -123,7 +123,34 @@ def process_text():
     return {'text': text, 'predictions': predictions}
 
 
+# Define the API endpoint for retrieving the overall mood of the day.
+# curl http://localhost:5000/today-mood
+@app.route('/today-mood')
+def mood_today():
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        query = """
+            SELECT primary_emotion 
+            FROM predictions 
+            WHERE DATE(record_timestamp) = DATE('now') 
+            GROUP BY primary_emotion 
+            ORDER BY COUNT(*) DESC 
+            LIMIT 1
+        """
+        
+        # Execute the query to get the highest repeated emotion
+        cursor.execute(query)
+        result = cursor.fetchone()
+
+        app.logger.info("result", result)
+
+        return {'today_mood': result}
+
+
+
 if __name__ == '__main__':
     create_table()
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0")
     # app.run()
