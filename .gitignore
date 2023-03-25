@@ -1,0 +1,24 @@
+# Python Virtual Environment
+venv/
+
+# Compiled Python files
+*.pyc
+
+# Python cache directories
+__pycache__/
+
+# Environment variables file
+.env
+
+# Logs
+logs/
+
+# Data and model artifacts
+data/
+models/
+db/
+
+# Other artifacts
+*.egg-info/
+dist/
+build/
