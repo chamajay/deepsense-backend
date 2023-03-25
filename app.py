@@ -125,4 +125,5 @@ def process_text():
 
 if __name__ == '__main__':
     create_table()
-    app.run()
+    app.run(host="0.0.0.0", debug=True)
+    # app.run()
