@@ -148,7 +148,7 @@ def mood_today():
             FROM predictions 
             WHERE DATE(record_timestamp) = DATE('now') 
             GROUP BY primary_emotion 
-            ORDER BY COUNT(*) DESC
+            ORDER BY record_timestamp DESC, COUNT(*) DESC
             LIMIT 1
         """
 
@@ -156,9 +156,14 @@ def mood_today():
         cursor.execute(query)
         result = cursor.fetchone()
 
+        response = {"today_mood": "None"}
+
+        if (result is not None):
+            response = {"today_mood": result[0]}
+
         app.logger.info("result", result)
 
-        return {"today_mood": result[0]}
+        return response
 
 
 # Define the API endpoint for retrieving the main 3 mood percentages of the day
@@ -174,7 +179,7 @@ def mood_percentages_today():
             FROM predictions
             WHERE DATE(record_timestamp) = DATE('now') 
             GROUP BY primary_emotion
-            ORDER BY count DESC;
+            ORDER BY record_timestamp DESC, count DESC;
         """
 
         # Execute the query to get the emotion count
