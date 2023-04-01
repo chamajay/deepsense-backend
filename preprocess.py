@@ -1,6 +1,7 @@
 import re
 import unidecode
 import contractions
+import emoji
 
 
 # remove accented characters
@@ -118,7 +119,12 @@ def expand_abbreviations(text):
     return expanded_text
 
 
+def convert_emoji_to_text(text):
+    return emoji.demojize(text, delimiters=("", ""))
+
+
 def process_txt(text):
+    text = convert_emoji_to_text(text)
     text = remove_accented_chars(text)
     text = expand_abbreviations(text)
     text = contractions.fix(text)
