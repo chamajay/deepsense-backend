@@ -186,23 +186,27 @@ def mood_percentages_today():
         cursor.execute(query)
         rows = cursor.fetchall()
 
-        # Total count
-        total_count = sum([row[1] for row in rows])
+        response = {"main_mood_percentages": "None"}
 
-        result = []
+        if (rows is not None):
+            # Total count
+            total_count = sum([row[1] for row in rows])
 
-        # Get 3 emotions with highest percentages
-        for row in rows[:3]:
-            emotion, count = row
-            percentage = (count / total_count) * 100
-            result.append(
-                {
-                    "emotion": emotion,
-                    "percentage": round(percentage, 1),
-                }
+            result = []
+
+            for row in rows:
+                emotion, count = row
+                percentage = (count / total_count) * 100
+                result.append(
+                    {
+                        "emotion": emotion,
+                        "percentage": round(percentage, 1),
+                    }
             )
 
-        return {"main_mood_percentages": result}
+            response = {"main_mood_percentages": result}
+
+        return response
 
 
 # Define the API endpoint for retrieving the latest 10 typing activity and their mood percentages
