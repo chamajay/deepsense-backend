@@ -148,7 +148,7 @@ def mood_today():
             FROM predictions 
             WHERE DATE(record_timestamp) = DATE('now') 
             GROUP BY primary_emotion 
-            ORDER BY record_timestamp DESC, COUNT(*) DESC
+            ORDER BY COUNT(*) DESC, MAX(record_timestamp) DESC
             LIMIT 1
         """
 
@@ -179,7 +179,7 @@ def mood_percentages_today():
             FROM predictions
             WHERE DATE(record_timestamp) = DATE('now') 
             GROUP BY primary_emotion
-            ORDER BY record_timestamp DESC, count DESC;
+            ORDER BY count DESC;
         """
 
         # Execute the query to get the emotion count
@@ -231,8 +231,7 @@ def recent_text_activity():
                 suicidal_label_0, 
                 suicidal_label_1, 
                 suicide_risk 
-                FROM 
-                predictions 
+            FROM predictions 
             ORDER BY record_timestamp DESC 
             LIMIT 10
         """
@@ -271,7 +270,7 @@ def recent_text_activity():
                     "primary_emotion": primary_emotion,
                     "suicidal_label_0": round(label_0 * 100, 2),
                     "suicidal_label_1": round(label_1 * 100, 2),
-                    "suicide_risk": risk,
+                    "suicide_risk": risk
                 }
             )
 
