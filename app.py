@@ -240,41 +240,44 @@ def recent_text_activity():
         cursor.execute(query)
         rows = cursor.fetchall()
 
-        result = []
+        response = {"recent_text_activity": "None"}
 
-        for row in rows:
-            (
-                text,
-                joy,
-                surprise,
-                neutral,
-                sadness,
-                anger,
-                disgust,
-                fear,
-                primary_emotion,
-                label_0,
-                label_1,
-                risk,
-            ) = row
-            result.append(
-                {
-                    "text": text,
-                    "joy": round(joy * 100, 2),
-                    "surprise": round(surprise * 100, 2),
-                    "neutral": round(neutral * 100, 2),
-                    "sadness": round(sadness * 100, 2),
-                    "anger": round(anger * 100, 2),
-                    "disgust": round(disgust * 100, 2),
-                    "fear": round(fear * 100, 2),
-                    "primary_emotion": primary_emotion,
-                    "suicidal_label_0": round(label_0 * 100, 2),
-                    "suicidal_label_1": round(label_1 * 100, 2),
-                    "suicide_risk": risk
-                }
-            )
+        if (rows is not None):
+            result = []
+            for row in rows:
+                (
+                    text,
+                    joy,
+                    surprise,
+                    neutral,
+                    sadness,
+                    anger,
+                    disgust,
+                    fear,
+                    primary_emotion,
+                    label_0,
+                    label_1,
+                    risk,
+                ) = row
+                result.append(
+                    {
+                        "text": text,
+                        "joy": round(joy * 100, 2),
+                        "surprise": round(surprise * 100, 2),
+                        "neutral": round(neutral * 100, 2),
+                        "sadness": round(sadness * 100, 2),
+                        "anger": round(anger * 100, 2),
+                        "disgust": round(disgust * 100, 2),
+                        "fear": round(fear * 100, 2),
+                        "primary_emotion": primary_emotion,
+                        "suicidal_label_0": round(label_0 * 100, 2),
+                        "suicidal_label_1": round(label_1 * 100, 2),
+                        "suicide_risk": risk
+                    }
+                )
+                response = {"recent_text_activity": result}
 
-        return {"recent_text_activity": result}
+        return response
 
 
 if __name__ == "__main__":
