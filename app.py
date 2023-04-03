@@ -115,8 +115,6 @@ def process_text():
     # get the input data from the request
     input_text = request.json["text"]
 
-    app.logger.info("text", input_text)
-
     # preprocess the text data
     preprocessed_text = preprocess.process_txt(input_text)
 
@@ -177,8 +175,6 @@ def mood_today():
 
         if (result is not None):
             response = {"today_mood": result[0]}
-
-        app.logger.info("result", result)
 
         return response
 
