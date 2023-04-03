@@ -79,7 +79,7 @@ def expand_abbreviations(text):
         'gl': 'good luck',
         'gn': 'good night',
         'gr8': 'great',
-        'gtfo': 'get the f*** out',
+        'gtfo': 'get the fuck out',
         'gtg': 'got to go',
         'hmu': 'hit me up',
         'icymi': 'in case you missed it',
@@ -89,7 +89,7 @@ def expand_abbreviations(text):
         'imo': 'in my opinion',
         'irl': 'in real life',
         'jk': 'just kidding',
-        'lmao': 'laughing my a** off',
+        'lmao': 'laughing my ass off',
         'lmk': 'let me know',
         'lol': 'laugh out loud',
         'mfw': 'my face when',
@@ -107,7 +107,7 @@ def expand_abbreviations(text):
         'tmi': 'too much information',
         'ttyl': 'talk to you later',
         'u': 'you',
-        'wtf': 'what the f***',
+        'wtf': 'what the fuck',
         'yolo': 'you only live once'
     }
 
