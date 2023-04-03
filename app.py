@@ -120,8 +120,6 @@ def process_text():
     # preprocess the text data
     preprocessed_text = preprocess.process_txt(input_text)
 
-    app.logger.info("preprocessed_text", preprocessed_text)
-
     # generate predictions
     emotion_predictions = emotion_classifier(preprocessed_text)
     suicidal_predictions = suicidal_classifer(preprocessed_text)
@@ -132,7 +130,26 @@ def process_text():
 
     insert_new(text, predictions)
 
-    return {"text": text, "predictions": predictions}
+    ## check if the user is at risk of suicide
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        query = """
+            SELECT COUNT(*) as frequency
+            FROM predictions
+            WHERE suicide_risk = 'suicidal' AND DATE(record_timestamp) = DATE('now');
+        """
+
+        cursor.execute(query)
+        result = cursor.fetchone()
+
+        response = {"suicidal_count": "None"}
+
+        if (result is not None):
+            response = {"suicidal_count": result[0]}
+
+        return response
 
 
 # Define the API endpoint for retrieving the overall mood of the day
