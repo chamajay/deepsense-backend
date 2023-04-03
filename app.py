@@ -136,7 +136,7 @@ def process_text():
         query = """
             SELECT COUNT(*) as frequency
             FROM predictions
-            WHERE suicide_risk = 'suicidal' AND DATE(record_timestamp) = DATE('now');
+            WHERE suicide_risk = 'suicidal' AND DATE(record_timestamp) = DATE('now', 'localtime');
         """
 
         cursor.execute(query)
@@ -161,7 +161,7 @@ def mood_today():
         query = """
             SELECT primary_emotion 
             FROM predictions 
-            WHERE DATE(record_timestamp) = DATE('now') 
+            WHERE DATE(record_timestamp) = DATE('now', 'localtime') 
             GROUP BY primary_emotion 
             ORDER BY COUNT(*) DESC, MAX(record_timestamp) DESC
             LIMIT 1
@@ -190,7 +190,7 @@ def mood_week():
         query = """
             SELECT primary_emotion 
             FROM predictions 
-            WHERE record_timestamp > datetime('now', '-7 days')
+            WHERE record_timestamp > datetime('now', '-7 days', 'localtime')
             GROUP BY primary_emotion 
             ORDER BY COUNT(*) DESC, MAX(record_timestamp) DESC 
             LIMIT 1
@@ -219,7 +219,7 @@ def mood_percentages_today():
         query = """
             SELECT primary_emotion, COUNT(*) as count
             FROM predictions
-            WHERE DATE(record_timestamp) = DATE('now') 
+            WHERE DATE(record_timestamp) = DATE('now', 'localtime') 
             GROUP BY primary_emotion
             ORDER BY count DESC, MAX(record_timestamp) DESC;
         """
@@ -251,6 +251,49 @@ def mood_percentages_today():
         return response
 
 
+# Define the API endpoint for retrieving the overall mood percentages of the week
+# curl http://localhost:5000/week_mood_percentages
+@app.route("/week_mood_percentages")
+def mood_percentages_week():
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        query = """
+            SELECT primary_emotion, COUNT(*) as count
+            FROM predictions
+            WHERE record_timestamp > datetime('now', '-7 days', 'localtime') 
+            GROUP BY primary_emotion
+            ORDER BY count DESC, MAX(record_timestamp) DESC;
+        """
+
+        # Execute the query to get the emotion count
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        response = {"mood_percentages_week": "None"}
+
+        if (rows is not None):
+            # Total count
+            total_count = sum([row[1] for row in rows])
+
+            result = []
+
+            for row in rows:
+                emotion, count = row
+                percentage = (count / total_count) * 100
+                result.append(
+                    {
+                        "emotion": emotion,
+                        "percentage": round(percentage, 1),
+                    }
+            )
+
+            response = {"mood_percentages_week": result}
+
+        return response
+
+
 # Define the API endpoint for retrieving the latest 10 typing activity and their mood percentages
 # curl http://localhost:5000/recent-text-activity
 @app.route("/recent-text-activity")
@@ -274,6 +317,7 @@ def recent_text_activity():
                 suicidal_label_1, 
                 suicide_risk 
             FROM predictions 
+            WHERE DATE(record_timestamp) = DATE('now', 'localtime') 
             ORDER BY record_timestamp DESC 
             LIMIT 10
         """
