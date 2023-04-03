@@ -179,7 +179,7 @@ def mood_percentages_today():
             FROM predictions
             WHERE DATE(record_timestamp) = DATE('now') 
             GROUP BY primary_emotion
-            ORDER BY count DESC;
+            ORDER BY count DESC, MAX(record_timestamp) DESC;
         """
 
         # Execute the query to get the emotion count
