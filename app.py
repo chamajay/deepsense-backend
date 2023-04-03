@@ -179,6 +179,35 @@ def mood_today():
         return response
 
 
+# Define the API endpoint for retrieving the overall mood of the week
+# curl http://localhost:5000/week-mood
+@app.route("/week-mood")
+def mood_week():
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        query = """
+            SELECT primary_emotion 
+            FROM predictions 
+            WHERE record_timestamp > datetime('now', '-7 days')
+            GROUP BY primary_emotion 
+            ORDER BY COUNT(*) DESC, MAX(record_timestamp) DESC 
+            LIMIT 1
+        """
+
+        # Execute the query to get the highest repeated emotion
+        cursor.execute(query)
+        result = cursor.fetchone()
+
+        response = {"week_mood": "None"}
+
+        if (result is not None):
+            response = {"week_mood": result[0]}
+
+        return response
+
+
 # Define the API endpoint for retrieving the main 3 mood percentages of the day
 # curl http://localhost:5000/today_mood_percentages
 @app.route("/today_mood_percentages")
