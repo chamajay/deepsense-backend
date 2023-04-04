@@ -211,7 +211,7 @@ def mood_week():
 # Define the API endpoint for retrieving the overall mood of the month
 # curl http://localhost:5000/month-mood
 @app.route("/month-mood")
-def mood_week():
+def mood_month():
     with app.app_context():
         db = get_db()
         cursor = db.cursor()
@@ -326,7 +326,7 @@ def mood_percentages_week():
 # Define the API endpoint for retrieving the overall mood percentages of the month
 # curl http://localhost:5000/month_mood_percentages
 @app.route("/month_mood_percentages")
-def mood_percentages_week():
+def mood_percentages_month():
     with app.app_context():
         db = get_db()
         cursor = db.cursor()
