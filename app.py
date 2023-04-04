@@ -323,6 +323,49 @@ def mood_percentages_week():
         return response
 
 
+# Define the API endpoint for retrieving the overall mood percentages of the month
+# curl http://localhost:5000/month_mood_percentages
+@app.route("/month_mood_percentages")
+def mood_percentages_week():
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        query = """
+            SELECT primary_emotion, COUNT(*) as count
+            FROM predictions
+            WHERE record_timestamp > datetime('now', '-1 month', 'localtime') 
+            GROUP BY primary_emotion
+            ORDER BY count DESC, MAX(record_timestamp) DESC;
+        """
+
+        # Execute the query to get the emotion count
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        response = {"mood_percentages_month": "None"}
+
+        if (rows is not None):
+            # Total count
+            total_count = sum([row[1] for row in rows])
+
+            result = []
+
+            for row in rows:
+                emotion, count = row
+                percentage = (count / total_count) * 100
+                result.append(
+                    {
+                        "emotion": emotion,
+                        "percentage": round(percentage, 1),
+                    }
+            )
+
+            response = {"mood_percentages_month": result}
+
+        return response
+
+
 # Define the API endpoint for retrieving the latest 10 typing activity and their mood percentages
 # curl http://localhost:5000/recent-text-activity
 @app.route("/recent-text-activity")
