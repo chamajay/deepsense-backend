@@ -14,7 +14,9 @@ def load_model(model_path):
 
 
 def load_emotion_distilroberta():
-    model_path = "models/emotion-english-distilroberta-base"
+    # model_path = "models/emotion-english-distilroberta-base"
+    model_path = os.path.join(os.path.curdir, 'models', 'emotion-english-distilroberta-base')
+
     if model_exists(model_path):
         return load_model(model_path)
     else:
@@ -23,7 +25,8 @@ def load_emotion_distilroberta():
 
 
 def load_suicidal_text_electra():
-    model_path = "models/suicidal-text-electra-cj"
+    # model_path = "models/suicidal-text-electra-cj"
+    model_path = os.path.join(os.path.curdir, 'models', 'suicidal-text-electra-cj')
     if model_exists(model_path):
         return load_model(model_path)
     else:

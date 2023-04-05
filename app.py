@@ -4,9 +4,12 @@ import models
 import preprocess
 import sqlite3
 import datetime
+import os
+
 
 # Database
-DATABASE = "db/predictions.db"
+# DATABASE = "db/predictions.db"
+DATABASE = os.path.join(os.path.curdir, 'db', 'predictions.db')
 
 # Load models and get classifiers
 emotion_classifier = models.load_emotion_distilroberta()
