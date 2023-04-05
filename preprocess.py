@@ -15,12 +15,12 @@ def remove_accented_chars(text):
 
 # remove urls
 def remove_url(text):
-    return re.sub(r"http\S+", "", text)
+    return re.sub(r"http\S+", "", text).strip()
 
 
 # remove symbols and digits
 def remove_symbols_digits(text):
-    return re.sub("[^a-zA-Z\s]", " ", text)
+    return re.sub("[^a-zA-Z\s]", "", text)
 
 
 # remove special characters
